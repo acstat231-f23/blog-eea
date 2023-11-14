@@ -1,0 +1,16 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+```{r}
+data1 <- read_csv("data/gni_gdp_lifeexp.csv")
+data2 <- read_csv("data/expected_years_of_schooling.csv")
+```
+
+
+```{r}
+#| echo: false
+
+```
