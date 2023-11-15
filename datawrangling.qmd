@@ -12,5 +12,5 @@ data2 <- read_csv("data/expected_years_of_schooling.csv")
 
 ```{r}
 #| echo: false
-
+data <- merge(data1, data2, by = join_by("Series Name" == "Series Name"))
 ```
