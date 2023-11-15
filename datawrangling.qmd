@@ -3,6 +3,9 @@ title: "Untitled"
 format: html
 editor: visual
 ---
+```{r}
+library(dyplr)
+```
 
 ```{r}
 data1 <- read_csv("data/gni_gdp_lifeexp.csv")
