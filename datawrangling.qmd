@@ -1,10 +1,10 @@
 ---
 title: "Untitled"
 format: html
-editor: visual
 ---
+
 ```{r}
-library(dplyr)
+library(tidyverse)
 ```
 
 ```{r warning=FALSE}
@@ -12,12 +12,10 @@ data1 <- read_csv("data/gni_gdp_lifeexp.csv", na = c(".."))
 data2 <- read_csv("data/expected_years_of_schooling.csv", na = c(".."))
 ```
 
-
 ```{r}
 #| echo: false
 data <- rbind(data1, data2)
 ```
-
 
 ```{r}
 for (year in 2000:2022) {
@@ -55,7 +53,48 @@ macro_trends <- data3 %>%
   )
 ```
 
+```{r}
+#write_csv(macro_trends, "data/macro_trends.csv")
+```
 
 ```{r}
-write_csv(macro_trends, "data/macro_trends.csv")
+#| label: impute-missing
+
+library(mice)
+
+# change variabl types so all included in mice for imputation
+macro_trends <- macro_trends |>
+  mutate(Country = as.factor(Country)
+        , year = parse_number(year))
+
+# visualize missingness patterns
+md.pattern(macro_trends, rotate.names = TRUE)
+naniar::vis_miss(macro_trends)
+
+imp <- mice(macro_trends)
+imp
+
+check <- complete(imp, "broad")
+imp_dat <- complete(imp, "long")
+
+imp_dat_avg <- imp_dat |>
+  group_by(Country, year) |>
+  summarize(across(c(life_exp, gni, gdp, yrs_sch), ~ mean(.)
+                   , .names="{col}_mean")
+            , across(c(life_exp, gni, gdp, yrs_sch), ~ min(.)
+                     , .names="{col}_min")
+            , across(c(life_exp, gni, gdp, yrs_sch), ~ max(.)
+                     , .names="{col}_max")
+            , across(c(life_exp, gni, gdp, yrs_sch), ~ sd(.)
+                     , .names="{col}_sd")) |>
+  select(Country, year, starts_with("gdp"), starts_with("life_exp"))
+
+# keep mean for simplicity / for class project 
+# do ***NOT*** do this in real life
+macro_trends_imp <- imp_dat |>
+  group_by(Country, year) |>
+  summarize(across(c(life_exp, gni, gdp, yrs_sch), ~ mean(.)))
+
+write_csv(macro_trends, "data/macro_trends_imp.csv")
 ```
+
