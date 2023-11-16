@@ -8,12 +8,54 @@ library(dyplr)
 ```
 
 ```{r}
-data1 <- read_csv("data/gni_gdp_lifeexp.csv")
-data2 <- read_csv("data/expected_years_of_schooling.csv")
+data1 <- read_csv("data/gni_gdp_lifeexp.csv", na = c(".."))
+data2 <- read_csv("data/expected_years_of_schooling.csv", na = c(".."))
 ```
 
 
 ```{r}
 #| echo: false
-data <- merge(data1, data2, by = join_by("Series Name" == "Series Name"))
+data <- rbind(data1, data2)
+```
+
+
+```{r}
+for (year in 2000:2022) {
+  old_name <- paste0(year, " [YR", year, "]")
+  new_name <- as.character(year)
+  names(data)[names(data) == old_name] <- new_name
+}
+
+start_year <- 2000
+end_year <- 2022
+data <- data %>%
+  filter(if_any(`2000`:`2022`, ~ !is.na(.)))
+
+data0 <- data %>%
+  select(-c(`Country Code`, `Series Code`)) %>% 
+  rename("Country" = "Country Name",
+         "variable" = "Series Name"
+  )
+
+data0 <- data0 %>% 
+  pivot_longer(cols = starts_with("20"),
+               names_to = "year",
+               values_to = "value")
+
+data3 <- data0 %>% 
+  pivot_wider( names_from = variable,
+               values_from = value)
+
+macro_trends <- data3 %>% 
+  rename(
+    "life_exp" = "Life expectancy at birth, total (years)",
+    "gni" = "GNI per capita (constant 2015 US$)",
+    "gdp" = "GDP per capita (constant 2015 US$)",
+    "yrs_sch" = "Expected years of schooling"
+  )
+```
+
+
+```{r}
+write_csv(macro_trends, "data/macro_trends_clean.csv")
 ```
