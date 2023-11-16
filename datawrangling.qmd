@@ -4,10 +4,10 @@ format: html
 editor: visual
 ---
 ```{r}
-library(dyplr)
+library(dplyr)
 ```
 
-```{r}
+```{r warning=FALSE}
 data1 <- read_csv("data/gni_gdp_lifeexp.csv", na = c(".."))
 data2 <- read_csv("data/expected_years_of_schooling.csv", na = c(".."))
 ```
@@ -57,5 +57,5 @@ macro_trends <- data3 %>%
 
 
 ```{r}
-write_csv(macro_trends, "data/macro_trends_clean.csv")
+write_csv(macro_trends, "data/macro_trends.csv")
 ```
