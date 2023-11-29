@@ -5,6 +5,7 @@ format: html
 
 ```{r}
 library(tidyverse)
+library(ggplot2)
 ```
 
 ```{r warning=FALSE}
@@ -94,4 +95,46 @@ macro_trends_imp <- imp_dat |>
 
 write_csv(macro_trends, "data/macro_trends_imp.csv")
 ```
+```{r}
+
+set.seed(231)  
+k_value <- 4  
+
+latest_data <- macro_trends_imp %>%
+  group_by(Country) %>%
+  filter(year == max(year))  
+
+# Select the variables for clustering
+cluster_data <- latest_data[, c("life_exp", "gni", "gdp", "yrs_sch")]
+
+# Standardizing variables
+scaled_data <- scale(cluster_data)
+
+# Performing k-means clustering
+kmeans_result <- kmeans(scaled_data, centers = k_value)
+
+# Adding cluster information to the original data
+macro_trends_with_clusters <- cbind(macro_trends, cluster = as.factor(kmeans_result$cluster))
+
+# Scatterplot matrix of clusters based on scaled variables
+ggpairs(macro_trends_with_clusters, aes(color = cluster)
+        , columns = c("life_exp", "gni", "gdp", "yrs_sch", "cluster")
+        , upper = list(continuous = "blank")
+        , title = "Scatterplot Matrix with Clusters"
+        , progress = FALSE) +
+  theme(text = element_text(size = 8))
+
+summary_by_cluster <- macro_trends_with_clusters %>%
+  group_by(cluster) %>%
+  summarise(across(c(life_exp, gni, gdp, yrs_sch), mean, na.rm = TRUE))
+
+summary_by_cluster
+```
+
+```{r}
+
+
+
+```
+
 
