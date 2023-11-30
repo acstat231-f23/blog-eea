@@ -6,6 +6,7 @@ format: html
 ```{r}
 library(tidyverse)
 library(ggplot2)
+library(plotly)
 ```
 
 ```{r warning=FALSE}
@@ -105,7 +106,7 @@ latest_data <- macro_trends_imp %>%
   filter(year == max(year))  
 
 # Select the variables for clustering
-cluster_data <- latest_data[, c("life_exp", "gni", "gdp", "yrs_sch")]
+cluster_data <- latest_data[, c("life_exp","gdp", "gni", "yrs_sch")]
 
 # Standardizing variables
 scaled_data <- scale(cluster_data)
@@ -115,10 +116,13 @@ kmeans_result <- kmeans(scaled_data, centers = k_value)
 
 # Adding cluster information to the original data
 macro_trends_with_clusters <- cbind(macro_trends, cluster = as.factor(kmeans_result$cluster))
+```
 
+
+```{r}
 # Scatterplot matrix of clusters based on scaled variables
 ggpairs(macro_trends_with_clusters, aes(color = cluster)
-        , columns = c("life_exp", "gni", "gdp", "yrs_sch", "cluster")
+        , columns = c("life_exp", "gni", "yrs_sch", "cluster")
         , upper = list(continuous = "blank")
         , title = "Scatterplot Matrix with Clusters"
         , progress = FALSE) +
@@ -131,10 +135,17 @@ summary_by_cluster <- macro_trends_with_clusters %>%
 summary_by_cluster
 ```
 
+
 ```{r}
-
-
-
+plot_ly(data = macro_trends_with_clusters, 
+        x = ~life_exp, y = ~gni, z = ~gdp, 
+        color = ~cluster, 
+        colors = c("red", "green", "blue", "purple"),
+        marker = list(size = 5),
+        type = "scatter3d",
+        mode = "markers") %>%
+  layout(scene = list(xaxis = list(title = "Life Expectancy"),
+                      yaxis = list(title = "GNI"),
+                      zaxis = list(title = "GDP"),
+                      margin = list(l = 0, r = 0, b = 0, t = 0)))
 ```
-
-
