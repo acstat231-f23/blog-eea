@@ -120,8 +120,8 @@ macro_trends_with_clusters <- cbind(macro_trends, cluster = as.factor(kmeans_res
 ```
 
 ```{r}
-df <- select(ungroup(macro_trends_imp), life_exp, gni, yrs_sch)
-df$cluster = factor(kmeans(df, 4)$cluster)
+df <- select(filter(macro_trends_imp, year == max(year)), life_exp, gni, yrs_sch)
+df$cluster = factor(kmeans(select(ungroup(df), -Country), 4)$cluster)
 
 library(plotly)
 library(dplyr)
@@ -129,6 +129,7 @@ p <- plot_ly(df, x=~life_exp, y=~gni,
 z=~yrs_sch, color=~cluster) %>%
      add_markers(size=1.5)
 print(p)
+
 ```
 
 ```{r}
