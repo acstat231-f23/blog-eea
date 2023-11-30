@@ -56,7 +56,6 @@ macro_trends <- data3 %>%
   )
 ```
 
-
 ```{r}
 #| label: impute-missing
 
@@ -97,6 +96,7 @@ macro_trends_imp <- imp_dat |>
 
 write_csv(macro_trends, "data/macro_trends_imp.csv")
 ```
+
 ```{r}
 
 set.seed(231)  
@@ -119,23 +119,17 @@ kmeans_result <- kmeans(scaled_data, centers = k_value)
 macro_trends_with_clusters <- cbind(macro_trends, cluster = as.factor(kmeans_result$cluster))
 ```
 
-
 ```{r}
-# Scatterplot matrix of clusters based on scaled variables
-ggpairs(macro_trends_with_clusters, aes(color = cluster)
-        , columns = c("life_exp", "gni", "yrs_sch", "cluster")
-        , upper = list(continuous = "blank")
-        , title = "Scatterplot Matrix with Clusters"
-        , progress = FALSE) +
-  theme(text = element_text(size = 8))
+df <- select(ungroup(macro_trends_imp), life_exp, gni, yrs_sch)
+df$cluster = factor(kmeans(df, 4)$cluster)
 
-summary_by_cluster <- macro_trends_with_clusters %>%
-  group_by(cluster) %>%
-  summarise(across(c(life_exp, gni, gdp, yrs_sch), mean, na.rm = TRUE))
-
-summary_by_cluster
+library(plotly)
+library(dplyr)
+p <- plot_ly(df, x=~life_exp, y=~gni, 
+z=~yrs_sch, color=~cluster) %>%
+     add_markers(size=1.5)
+print(p)
 ```
-
 
 ```{r}
 plot_ly(data = macro_trends_with_clusters, 
