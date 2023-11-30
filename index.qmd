@@ -1,13 +1,17 @@
 ---
 title: "Your Project Title Here"
-author: "Ebony Wamwitha, Ephrata Getachew, Aika Shorayeva"
+author: "Your team member names here"
 date: "Add a date"
-output:
-  rmdformats::readthedown:
-    highlight: "kate"
+format:
+  html:
+    theme: minty
+    toc: true
 ---
 
-```{r setup, include = FALSE}
+```{r}
+#| label: setup
+#| include: false
+
 # Set code chunk defaults 
 # Consider adding `message = FALSE` option
 knitr::opts_chunk$set(echo = FALSE) 
@@ -22,11 +26,11 @@ library(tidyverse)
 
 # Intro
 
-This is an R Markdown blog template. This document will be knit to HTML to produce a webpage that will be hosted publicly via GitHub.
+This is a Quarto blog template. This document will be knit to HTML to produce a webpage that will be hosted publicly via GitHub.
 
 ## Website publication work flow
 
-1. Edit Rmd
+1. Edit qmd
 
 2. Knit to HTML to view progress. You may need to click "Open in Browser" for some content to show (sometimes content won't show until you actually push your changes to GitHub and view the published website).
 
@@ -35,9 +39,13 @@ This is an R Markdown blog template. This document will be knit to HTML to produ
 
 # Content
 
-You can include text, `code`, and output as usual. Remember to take full advantage of Markdown and follow our [Style Guide](https://acstat231-f22.github.io/home/style-guide.html#Text_narration).
+You can include text, `code`, and output as usual. Remember to take full advantage of Markdown and its [syntax shortcuts](https://www.markdownguide.org/basic-syntax/).
 
-```{r ggplot-example, fig.align="left", out.width="100%"}
+```{r}
+#| label: ggplot-example
+#| fig.align: left
+#| out.width: 100%
+
 ggplot(data = cars, aes(x = speed, y = dist)) + 
   geom_point() + 
   labs(x = "Speed of car (mph)",
@@ -49,7 +57,7 @@ ggplot(data = cars, aes(x = speed, y = dist)) +
 
 Examples and additional guidance are provided below. 
 
-Take note of the the default code chunk options in the `setup` code chunk. For example, unlike the rest of the Rmd files we worked in this semester, the default code chunk option is `echo = FALSE`, so you will need to set `echo  = TRUE` for any code chunks you would like to display in the blog. You should be thoughtful and intentional about the code you choose to display. 
+Take note of the the default code chunk options in the `setup` code chunk. For example, unlike the rest of the qmd files we worked in this semester, the default code chunk option is `echo = FALSE`, so you will need to set `echo  = TRUE` for any code chunks you would like to display in the blog. You should be thoughtful and intentional about the code you choose to display. 
 
 
 ## Links 
@@ -76,7 +84,10 @@ You may embed a published Shiny app in your blog if useful, but be aware that th
 
 Any Shiny apps embedded in your blog should be accompanied by the link to the published Shiny app (I did this using a figure caption in the code chunk below, but you don't have to incorporate the link in this way).
 
-```{r ds-salaries-app, out.width = "100%", out.extra = 'data-external="1" frameborder="no"', fig.cap = "[Data Science Salaries Shiny App](https://bebailey.shinyapps.io/data-science-salaries)"}
+```{r}
+#| label: ds-salaries-app
+#| out.width: "100%"
+
 knitr::include_app("https://bebailey.shinyapps.io/data-science-salaries",
                    height = "500px")
 ```
@@ -90,10 +101,14 @@ The [**DT** package](https://rstudio.github.io/DT/) is great for making dynamic 
 
 Note: you should load any packages you use in the `setup` code chunk as usual. The `library()` functions are shown below just for demonstration.
 
-```{r dt-example, message=FALSE, echo=TRUE}
+```{r}
+#| label: dt-example
+#| message: false
+#| echo: true
+
 library(DT)
-mtcars %>% 
-  select(mpg, cyl, hp) %>% 
+mtcars |>
+  select(mpg, cyl, hp) |>
   datatable(colnames = c("MPG", "Number of cylinders", "Horsepower"),
             filter = 'top',
             options = list(pageLength = 10, autoWidth = TRUE))
@@ -103,14 +118,16 @@ mtcars %>%
 
 You can also use [**kableExtra**](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html) for customizing HTML tables.
 
-```{r kable-example, echo=TRUE, message=FALSE}
+```{r}
+#| label: kable-example
+#| echo: true
+#| message: false
+
 library(kableExtra)
-summary(cars) %>%
-  kbl(col.names = c("Speed", "Distance"),
-      row.names = FALSE) %>%
-  kable_styling(bootstrap_options = "striped",
-                full_width = FALSE) %>%
-  row_spec(0, bold = TRUE) %>%
+summary(cars) |>
+  kbl(col.names = c("Speed", "Distance"), row.names = FALSE) |>
+  kable_styling(bootstrap_options = "striped", full_width = FALSE) |>
+  row_spec(0, bold = TRUE) |>
   column_spec(1:2, width = "1.5in") 
 ```
 
@@ -119,12 +136,19 @@ summary(cars) %>%
 
 Images and gifs can be displayed using code chunks:
 
-```{r, fig.cap='"Safe Space" by artist Kenesha Sneed', out.width="80%", fig.align="center"}
+```{r}
+#| fig.cap: '"Safe Space" by artist Kenesha Sneed'
+#| out.width: 80%
+#| fig.align: center
+
 knitr::include_graphics("img/Kenesha-Sneed_safe-space.jpeg")
 ```
 
 
-```{r, fig.cap="This is a figure caption", out.width="50%", fig.align="center"}
+```{r}
+#| fig.cap: "This is a figure caption"
+#| out.width: 50%
+#| fig.align: center
 knitr::include_graphics("https://media.giphy.com/media/H7ZrrA9V2pd3Tehdds/giphy.gif")
 ```
 
@@ -133,26 +157,6 @@ You may also use Markdown syntax for displaying images as shown below, but code 
 ![This is another figure caption](https://media.giphy.com/media/8i5IvxP9ZLgmjXN1BF/giphy.gif)
 
 Either way, the file path can be a local path within your project directory or a URL for an image hosted online. This syntax works for PNG, PDF, JPG, and even GIF formats.
-
-
-## Videos
-
-You can use code chunks or Markdown syntax include links to any valid YouTube or Vimeo URLs (see [here](https://bookdown.org/yihui/rmarkdown/learnr-videos.html) for details) or point to a location within your project directory. 
-
-Code chunk:
-
-```{r, out.width="80%", fig.align="center"}
-knitr::include_url("https://www.youtube.com/watch?v=up8ODGFWgFg")
-```
-
-Markdown syntax:
-
-![](https://www.youtube.com/watch?v=up8ODGFWgFg){width="90%"}
-
-
-You may need to push your updates to GitHub to see if the videos work.
-
-
 
 
 ## Equations
@@ -220,8 +224,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vel ipsum e
 
 Aliquam non ante et erat luctus hendrerit eu ac justo. Fusce lacinia pulvinar neque non laoreet. Fusce vitae mauris pharetra, scelerisque purus eget, pharetra nisl. Aenean volutpat elementum tortor vitae rhoncus. Phasellus nec tellus euismod neque congue imperdiet tincidunt in mauris. Morbi eu lorem molestie, hendrerit lorem nec, semper massa. Sed vulputate hendrerit ex, eget cursus purus. Pellentesque consequat erat leo, eleifend porttitor lacus porta at. Vivamus faucibus quam ipsum, id condimentum ligula malesuada ultrices. Nullam luctus leo elit, vitae rutrum nibh venenatis eget. Nam at sodales purus. Proin nulla tellus, lacinia eget pretium sed, vehicula aliquet neque. Morbi vel eros elementum, suscipit elit eu, consequat libero. Nulla nec aliquet neque. Nunc bibendum sapien lectus, sed elementum nisi rutrum non. Ut vulputate at lacus eget maximus.
 
-```{r, out.width="80%", fig.align="right"}
-mtcars %>% 
+```{r}
+#| out.width: 80%
+#| fig.align: right
+mtcars |>
   ggplot(aes(x = wt, y = mpg)) +
   geom_point()
 ```
@@ -236,21 +242,41 @@ mtcars %>%
 # Customizing your blog design
 
 
-As a *final* detail **only** if you have time, you can explore options for customizing the style of your blog. By default, we are using the `readthedown` theme from the [**rmdformats** package](https://github.com/juba/rmdformats) (see Line 6 of this file if you want to switch out themes).
+As a *final* detail **only** if you have time, you can explore options for customizing the style of your blog. By default, we are using the `cosmo` theme from Bootswatch themes (see Line 7 of this file if you want to switch out themes). 
 
 
 ## Theme
-You can use the [**rmdformats** package](https://github.com/juba/rmdformats) to play around with some pre-built themes. There are, I'm sure, many many many more similar packages with built in themes, or you can look into how to include a CSS code chunk to customize aspects of a theme.  
 
-Using the **rmdformats** package, you can change the theme itself (Line 6): 
+There are 25 Bootswatch themes included with Quarto. You can change the theme easily by specifying one of these themes on Line 7: 
 
-* `rmdformats::readthedown`
-* `rmdformats::downcute` 
-  * For `downcute` only, you can add a new indented line below Line 6 with the code `downcute_theme: "chaos"` for the `downcute chaos` theme
-* `rmdformats::robobook` 
-* `rmdformats::material`
+- default  
+- cerulean  
+- cosmo  
+- cyborg  
+- darkly  
+- flatly  
+- journal  
+- litera  
+- lumen  
+- lux  
+- materia  
+- minty  
+- morph  
+- pulse  
+- quartz  
+- sandstone  
+- simplex  
+- sketchy  
+- slate  
+- solar  
+- spacelab  
+- superhero  
+- united  
+- vapor  
+- yeti  
+- zephyr
 
-You can explore additional YAML options by looking at the [**rmdformats** package](https://github.com/juba/rmdformats) page or running, for example, `?rmdformats::readthedown()` to see the help documentation for a particular theme from the package. 
+There are, I'm sure, many more similar packages with built in themes, or you can look into how to include a CSS code chunk to customize aspects of a theme.  
 
 ## Synax highlighting
 
@@ -269,7 +295,7 @@ You can also change the code chunk syntax highlighting option (Line 7, `highligh
 
 ## Font size, type, and other customization
 
-Further customization requires adding a CSS style file or code chunk or incorporating other development options. Customization beyond the **rmdformats** package should be your lowest and final priority for the project. Ensure your content is fully prepared first.
+Further customization requires adding a CSS style file or code chunk or incorporating other development options. Further customization should be your lowest and final priority for the project. Ensure your content is fully prepared first.
 
 
 # References
