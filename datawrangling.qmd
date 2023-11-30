@@ -120,28 +120,20 @@ macro_trends_with_clusters <- cbind(macro_trends, cluster = as.factor(kmeans_res
 ```
 
 ```{r}
-df <- select(filter(macro_trends_imp, year == max(year)), life_exp, gni, yrs_sch)
+set.seed(231)
+
+macro_trends_imp_scaled <- macro_trends_imp %>%
+  mutate(across(where(is.numeric),  ~scale(.)[,1], .names = "{.col}_scaled")) %>%
+  select(Country, year, life_exp_scaled, gni_scaled, yrs_sch_scaled)
+
+df <- select(filter(macro_trends_imp_scaled, year == max(year)), life_exp_scaled, gni_scaled, yrs_sch_scaled)
 df$cluster = factor(kmeans(select(ungroup(df), -Country), 4)$cluster)
 
 library(plotly)
 library(dplyr)
-p <- plot_ly(df, x=~life_exp, y=~gni, 
-z=~yrs_sch, color=~cluster) %>%
+p <- plot_ly(df, x=~life_exp_scaled, y=~gni_scaled, 
+z=~yrs_sch_scaled, color=~cluster) %>%
      add_markers(size=1.5)
 print(p)
 
-```
-
-```{r}
-plot_ly(data = macro_trends_with_clusters, 
-        x = ~life_exp, y = ~gni, z = ~gdp, 
-        color = ~cluster, 
-        colors = c("red", "green", "blue", "purple"),
-        marker = list(size = 5),
-        type = "scatter3d",
-        mode = "markers") %>%
-  layout(scene = list(xaxis = list(title = "Life Expectancy"),
-                      yaxis = list(title = "GNI"),
-                      zaxis = list(title = "GDP"),
-                      margin = list(l = 0, r = 0, b = 0, t = 0)))
 ```
