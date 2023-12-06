@@ -133,9 +133,30 @@ library(plotly)
 library(dplyr)
 p <- plot_ly(df, x=~life_exp_scaled, y=~gni_scaled, 
 z=~yrs_sch_scaled, color=~cluster) %>%
-  layout(title = 'unsupervised learning', scene = list(xaxis = list(title = 'Birth Life Expectancy (yrs)'), 
+  layout(title = 'Human Development Index Indicators (2022)', scene = list(xaxis = list(title = 'Birth Life Expectancy (yrs)'), 
          yaxis = list(title = 'GNI per capita'), zaxis = list(title = 'Expected Years of Schooling (%)')))%>% 
      add_markers(size=1.5)
 print(p)
 
 ```
+
+```{r}
+train <- macro_trends_imp %>%
+  filter(year < 2019)
+
+test <- macro_trends_imp %>%
+  filter(year >= 2019)
+```
+
+```{r}
+fit <- lm(gdp ~ gni + yrs_sch + life_exp, data = train)
+summary(fit)
+```
+
+```{r}
+test$prediction <- predict(fit, select(ungroup(test), gni, yrs_sch, life_exp))
+
+test %>%
+  select(gdp, prediction)
+```
+
