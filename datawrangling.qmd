@@ -10,7 +10,7 @@ library(plotly)
 library(GGally)
 ```
 
-```{r warning=FALSE}
+```{r, message = FALSE, warning=FALSE}
 data1 <- read_csv("data/gni_gdp_lifeexp.csv", na = c(".."))
 data2 <- read_csv("data/expected_years_of_schooling.csv", na = c(".."))
 ```
@@ -158,5 +158,15 @@ test$prediction <- predict(fit, select(ungroup(test), gni, yrs_sch, life_exp))
 
 test %>%
   select(gdp, prediction)
+```
+```{r}
+combined_data <- rbind(train, test)
+
+ggplot(combined_data, aes(x = gni, y = gdp)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "red") + 
+    labs(title = " ",
+    x = "GNI",
+    y = "GDP")
 ```
 
