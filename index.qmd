@@ -26,7 +26,11 @@ library(tidyverse)
 
 # Intro
 
-This is a Quarto blog template. This document will be knit to HTML to produce a webpage that will be hosted publicly via GitHub.
+Knowing what influences a country's development is a never-ending task in the field of macroeconomics. Expanding upon the work completed in the middle of the semester, our final assignment explores the macroeconomic patterns in many nations. However, this time, our focal point revolves around key indicators that shape the Human Development Index (HDI), including life expectancy at birth, expected and mean years of schooling, and Gross National Income (GNI) per capita.
+Through the use of unsupervised learning, we aim to cluster countries based on these HDI indicators, revealing trends and ideas beyond geographic borders. The main goal of our research is to predict the HDI category a certain nation may fall into, and potentially compare the results with the recognized HDI Rank list. We hope that this effort will help evaluate our model's accuracy. 
+We also hope to develop a predictive model for countries’ Gross Domestic Product (GDP) using a combination of the HDI indicators. By dividing the data into training and testing sets, our method makes it possible to carefully assess the prediction accuracy.
+
+
 
 ## Website publication work flow
 
@@ -296,6 +300,14 @@ You can also change the code chunk syntax highlighting option (Line 7, `highligh
 ## Font size, type, and other customization
 
 Further customization requires adding a CSS style file or code chunk or incorporating other development options. Further customization should be your lowest and final priority for the project. Ensure your content is fully prepared first.
+
+# Conclusion
+
+Utilizing unsupervised learning to cluster countries and predicting GDP through supervised learning, our model provided valuable insights into the dynamics of economic development. However, a notable observation is the tendency for GDP overprediction by our model, likely influenced by the unprecedented global disruptions caused by the COVID-19 pandemic. This may emphasize how the model needs to be improved to better account for unanticipated shocks and how real-time data may need to be included for increased accuracy. 
+
+# Suggestions for the future
+
+As we look to the future, our investigation of macroeconomic patterns using Human Development Index (HDI) indicators opens up new and intriguing areas for further study and improvement. Further developments of the project might consider using more sophisticated algorithms and methods, and broadening the dataset to cover a wider range of socioeconomic factors in order to improve the model. It should also be a priority to address the effects of external shocks like the COVID-19 pandemic, which may prompt the creation of future models that can adjust to unforeseen interruptions.
 
 
 # References
