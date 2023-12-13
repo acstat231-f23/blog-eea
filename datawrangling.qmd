@@ -121,8 +121,11 @@ macro_trends_with_clusters <- cbind(macro_trends, cluster = as.factor(kmeans_res
 ```
 
 ```{r}
+# Clustering Visualization
+
 set.seed(231)
 
+# Scaling variables
 macro_trends_imp_scaled <- macro_trends_imp %>%
   mutate(across(where(is.numeric),  ~scale(.)[,1], .names = "{.col}_scaled")) %>%
   select(Country, year, life_exp_scaled, gni_scaled, yrs_sch_scaled)
@@ -139,14 +142,16 @@ z=~yrs_sch_scaled, color=~cluster) %>%
      add_markers(size=1.5)
 print(p)
 
-
+# Exported Data for Shiny implementation
 write.csv(df, "data/shiny.csv")
 ```
 
 ```{r}
+# Cluster Map Data
 world_map <- maps::map("world", plot = FALSE, fill = TRUE) %>%
   st_as_sf()
 
+# Standartizing Country Names
 old_names <- c("Bahamas, The", "Cabo Verde", "Czechia", "Congo, Dem. Rep.", "Egypt, Arab Rep.", "Gambia, The", "Korea, Rep.",
                "Kyrgyz Republic", "Iran, Islamic Rep.", "Lao PDR", "Moldova", "Congo, Rep.",
                "Russian Federation", "Slovak Republic", "Syrian Arab Republic",
@@ -161,11 +166,13 @@ for (i in 1:length(new_names)){
   world_map$ID[world_map$ID == new_names[i]] <- old_names[i]
 }
 
+# Merging Country clusters with their spatial information
 leaflet_data <- select(df, Country, cluster) %>%
   inner_join(world_map, by = c("Country"="ID"))
 ```
 
 ```{r}
+# Cluster Mapping
 p <- ggplot(leaflet_data, aes(geometry=geom, fill = cluster)) +
       geom_sf() +
       theme_void() +
@@ -177,6 +184,7 @@ p
 ```
 
 ```{r}
+# Test-Train data split for prediction model
 train <- macro_trends_imp %>%
   filter(year < 2019)
 
@@ -185,11 +193,13 @@ test <- macro_trends_imp %>%
 ```
 
 ```{r}
+# Training the prediction algorithm
 fit <- lm(gdp ~ gni + yrs_sch + life_exp, data = train)
 summary(fit)
 ```
 
 ```{r}
+# Testing the prediction algorith
 test$prediction <- predict(fit, select(ungroup(test), gni, yrs_sch, life_exp))
 
 test %>%
@@ -197,6 +207,7 @@ test %>%
 ```
 
 ```{r}
+# Error calculation for the model
 test$prediction <- predict(fit, newdata = select(ungroup(test), gni, yrs_sch, life_exp))
 
 # prediction error
