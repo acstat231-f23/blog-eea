@@ -139,6 +139,8 @@ z=~yrs_sch_scaled, color=~cluster) %>%
      add_markers(size=1.5)
 print(p)
 
+
+write.csv(df, "data/shiny.csv")
 ```
 
 ```{r}
@@ -153,12 +155,14 @@ test <- macro_trends_imp %>%
 fit <- lm(gdp ~ gni + yrs_sch + life_exp, data = train)
 summary(fit)
 ```
+
 ```{r}
 test$prediction <- predict(fit, select(ungroup(test), gni, yrs_sch, life_exp))
 
 test %>%
   select(gdp, prediction)
 ```
+
 ```{r}
 test$prediction <- predict(fit, newdata = select(ungroup(test), gni, yrs_sch, life_exp))
 
@@ -177,7 +181,6 @@ predictions_df_sorted
 
 
 ```
-
 
 ```{r}
 predictors <- c("gni", "yrs_sch", "life_exp")
@@ -217,13 +220,10 @@ results
 
 ```
 
-
-## Interpretation 
+## Interpretation
 
 The training data is split by year, assigning observations before 2019 to the training set. Using predictors - Gross National Income (gni), Years of Schooling (yrs_sch), and Life Expectancy (life_exp), a linear regression model is fitted to this training set. The model predicts larger GDP values, evident in low Mean Squared Error (MSE) and Root Mean Squared Error (RMSE) for variables like gni. However, it needs to improve with precision in predicting smaller GDP values, a discrepancy reflected in both evaluation metrics and individual plots.
 
 In the linear regression analysis on GDP, predictors such as gni and yrs_sch exhibit strong positive effects, while life_exp shows a weaker negative impact. The R-squared value of 0.7036 indicates that the model explains approximately 70.36% of GDP variability. Individual evaluation for each predictor highlights varying prediction accuracies, with gni having an MSE of 221,308,719 and an RMSE of 14,876.45.
 
-The model's reduced accuracy in predicting GDP for smaller countries may result from several factors. Smaller economies tend to be more volatile and susceptible to external factors, posing challenges for accurate modeling. Limited data points for smaller countries resulted in less reliable estimations of predictor-GDP relationships. Moreover, factors specific to smaller nations, like regional dependencies or unique economic structures, need to be adequately captured by chosen predictors, affecting the model's predictive capability. 
-
-
+The model's reduced accuracy in predicting GDP for smaller countries may result from several factors. Smaller economies tend to be more volatile and susceptible to external factors, posing challenges for accurate modeling. Limited data points for smaller countries resulted in less reliable estimations of predictor-GDP relationships. Moreover, factors specific to smaller nations, like regional dependencies or unique economic structures, need to be adequately captured by chosen predictors, affecting the model's predictive capability.
