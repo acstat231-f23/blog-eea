@@ -171,7 +171,7 @@ print(p)
 
 Knowing what influences a country's development is a never-ending task in the field of macroeconomics. Expanding upon the work completed in the middle of the semester, our final assignment explores the macroeconomic patterns in many nations. However, this time, our focal point revolves around key indicators that shape the **Human Development Index (HDI)**, including **life expectancy at birth**, **expected and mean years of schooling**, and **Gross National Income (GNI) per capita**.
 Through the use of unsupervised learning, we aim to cluster countries based on these HDI indicators, revealing trends and ideas beyond geographic borders. The main goal of our research is to predict the HDI category a certain nation may fall into, and potentially compare the results with the recognized HDI Rank list. We hope that this effort will help evaluate our model's accuracy. 
-We also hope to develop a predictive model for countries’ Gross Domestic Product (GDP) using a combination of the HDI indicators. By dividing the data into training and testing sets, our method makes it possible to carefully assess the prediction accuracy.
+We also hope to develop a predictive model for countries’ **Gross Domestic Product (GDP)** using a combination of the HDI indicators. By dividing the data into training and testing sets, our method makes it possible to carefully assess the prediction accuracy.
 
 ## k-Means Clsutering over HDI Indicators
 
@@ -281,13 +281,13 @@ test |>
 ```
 
 
-The model struggles to accurately predict **GDP** for countries due to the complex nature of economies. Economic systems can be unpredictable and easily influenced by external factors, making it challenging to create precise models. The limited data for some countries makes it harder to establish strong connections between predictors and **GDP**, resulting in less dependable predictions. Moreover, each country has unique aspects like regional dependencies and different economic structures that the chosen predictors might not fully capture.
+The model struggles to accurately predict GDP for countries due to the complex nature of economies. Economic systems can be unpredictable and easily influenced by external factors, making it challenging to create precise models. The limited data for some countries makes it harder to establish strong connections between predictors and GDP, resulting in less dependable predictions. Moreover, each country has unique aspects like regional dependencies and different economic structures that the chosen predictors might not fully capture.
 
 Additionally, we only considered three variables in the model, but there are more factors that we didn't take into account. In the model, we treated the variables as independent, but in the real world, these predictors are often interdependent. For instance, consider the relationship between **Gross National Income (GNI)**, **Years of Schooling (yrs_sch)**, and **Life Expectancy (life_exp)**. In reality, higher GNI might positively influence both education levels and life expectancy. Neglecting such interdependencies can lead to an oversimplified model that fails to capture the intricate dynamics of the economic system. To improve accuracy, future models should consider a broader set of variables and account for the interconnections between predictors to better reflect real-world complexities.
 
 # Conclusion
 
-Utilizing unsupervised learning to cluster countries and predicting **GDP** through supervised learning, our model provided valuable insights into the dynamics of economic development. However, a notable observation is the tendency for **GDP** overprediction by our model, likely influenced by the unprecedented global disruptions caused by the COVID-19 pandemic. This may emphasize how the model needs to be improved to better account for unanticipated shocks and how real-time data may need to be included for increased accuracy. 
+Utilizing unsupervised learning to cluster countries and predicting GDP through supervised learning, our model provided valuable insights into the dynamics of economic development. However, a notable observation is the tendency for GDP overprediction by our model, likely influenced by the unprecedented global disruptions caused by the COVID-19 pandemic. This may emphasize how the model needs to be improved to better account for unanticipated shocks and how real-time data may need to be included for increased accuracy. 
 
 # Suggestions for the future
 
