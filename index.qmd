@@ -1,7 +1,7 @@
 ---
 title: "Macroeconomic Trends Explorer"
 author: "Ephrata Getachew, Aika Shorayeva, Ebony Wamwitha"
-date: "December 13th"
+date: 12/13/2023
 format:
   html:
     theme: lumen
@@ -9,7 +9,7 @@ format:
     toc: true
 ---
 
-```{r}
+```{r, message=FALSE}
 #| label: setup
 #| include: false
 
@@ -40,13 +40,13 @@ data1 <- read_csv("data/gni_gdp_lifeexp.csv", na = c(".."))
 data2 <- read_csv("data/expected_years_of_schooling.csv", na = c(".."))
 ```
 
-```{r,include=FALSE }
+```{r,include=FALSE, message=FALSE }
 #| echo: false
 
 data <- rbind(data1, data2)
 ```
 
-```{r,include=FALSE}
+```{r,include=FALSE, message=FALSE}
 #| echo: false
 
 for (year in 2000:2022) {
@@ -84,10 +84,9 @@ macro_trends <- data3 %>%
   )
 ```
 
-```{r,include=FALSE}
+```{r,include=FALSE, message=FALSE}
 #| label: impute-missing
 #| echo: false
-
 
 # change variabl types so all included in mice for imputation
 macro_trends <- macro_trends |>
@@ -125,7 +124,7 @@ macro_trends_imp <- imp_dat |>
 write_csv(macro_trends, "data/macro_trends_imp.csv")
 ```
 
-```{r}
+```{r, message=FALSE}
 set.seed(231)  
 k_value <- 4  
 
@@ -146,7 +145,7 @@ kmeans_result <- kmeans(scaled_data, centers = k_value)
 macro_trends_with_clusters <- cbind(macro_trends, cluster = as.factor(kmeans_result$cluster))
 ```
 
-```{r}
+```{r, message=FALSE}
 # Clustering Visualization
 
 set.seed(231)
@@ -158,9 +157,6 @@ macro_trends_imp_scaled <- macro_trends_imp %>%
 
 df <- select(filter(macro_trends_imp_scaled, year == max(year)), life_exp_scaled, gni_scaled, yrs_sch_scaled)
 df$cluster = factor(kmeans(select(ungroup(df), -Country), 4)$cluster)
-
-library(plotly)
-library(dplyr)
 p <- plot_ly(df, x=~life_exp_scaled, y=~gni_scaled, 
 z=~yrs_sch_scaled, color=~cluster) %>%
   layout(title = 'Human Development Index Indicators (2022)', scene = list(xaxis = list(title = 'Birth Life Expectancy (yrs)'), 
@@ -196,7 +192,6 @@ For our Cluster Analysis, we tried to imitate this process of categorizing count
 While it the 3-dimensional visualization helps us makes sense of how clusters were made, a map might aid us better to see which countries were grouped together by our model. 
 
 ![](img/cluster_map.png)
-(https://quarto.org "Cluster Mapping")
 
 ### Interpretation
 
@@ -233,7 +228,7 @@ summary(fit)
 In the linear regression analysis on GDP, predictors such as gni and yrs_sch exhibit strong positive effects, while life_exp shows a weaker negative impact. The R-squared value of 0.7036 indicates that the model explains approximately 70.36% of GDP variability.
 
 
-```{r}
+```{r, message=FALSE}
 #| out.width: 80%
 #| fig.align: right
 #| echo: false
@@ -243,7 +238,6 @@ fit_individual <- lm(gdp ~ gni, data = train)
 
 # Make predictions on the test set
 test$prediction_individual <- predict(fit_individual, newdata = test)
-
 
 # Plot
 p_individual <- ggplot(test, aes(x = gni, y = gdp, color = prediction_individual)) +
@@ -302,7 +296,7 @@ As we look to the future, our investigation of macroeconomic patterns using Huma
 
 # References
 
-```{r,include=FALSE}
+```{r, include= FALSE}
 citation("DT")
 citation("tidyverse")
 citation("ggplot2")
@@ -323,16 +317,18 @@ World Bank (2000-2022). "World Development Indicators," The World Bank DataBank.
 
 <!-- R package -->
 
-Xie Y, Cheng J, Tan X (2022). "DT: A Wrapper of the JavaScript Library 'DataTables'," R package version 0.24, available at <https://CRAN.R-project.org/package=DT>.
-  
-Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL, Miller E, Bache SM, Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019). “Welcome to the tidyverse.” _Journal of Open Source Software_, *4*(43), 1686. doi:10.21105/joss.01686 <https://doi.org/10.21105/joss.01686>.
+C. Sievert. Interactive Web-Based Data Visualization with R, plotly, and shiny. Chapman and Hall/CRC Florida, 2020.
 
 H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
 
-C. Sievert. Interactive Web-Based Data Visualization with R, plotly, and shiny. Chapman and Hall/CRC Florida, 2020.
-
 Schloerke B, Cook D, Larmarange J, Briatte F, Marbach M, Thoen E, Elberg A, Crowley J (2021). _GGally: Extension to 'ggplot2'_. R package version 2.1.2, <https://CRAN.R-project.org/package=GGally>.
+
+Stef van Buuren, Karin Groothuis-Oudshoorn (2011). mice: Multivariate Imputation by Chained Equations in R. Journal of Statistical Software, 45(3), 1-67. DOI 10.18637/jss.v045.i03.
+
+Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL, Miller E, Bache SM, Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019). “Welcome to the tidyverse.” _Journal of Open Source Software_, *4*(43), 1686. doi:10.21105/joss.01686 <https://doi.org/10.21105/joss.01686>.
 
 Wickham H, Vaughan D, Girlich M (2023). _tidyr: Tidy Messy Data_. R package version 1.3.0, <https://CRAN.R-project.org/package=tidyr>.
 
-Stef van Buuren, Karin Groothuis-Oudshoorn (2011). mice: Multivariate Imputation by Chained Equations in R. Journal of Statistical Software, 45(3), 1-67. DOI 10.18637/jss.v045.i03.
+Winston Chang, Joe Cheng, JJ Allaire, Carson Sievert, Barret Schloerke, Yihui Xie, Jeff Allen, Jonathan McPherson, Alan Diper, Barbara Borges (2023). shiny: Web Application Framework for R <https://CRAN.R-project.org/package=shiny>
+
+Xie Y, Cheng J, Tan X (2022). "DT: A Wrapper of the JavaScript Library 'DataTables'," R package version 0.24, available at <https://CRAN.R-project.org/package=DT>.
