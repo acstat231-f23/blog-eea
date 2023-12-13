@@ -144,6 +144,39 @@ write.csv(df, "data/shiny.csv")
 ```
 
 ```{r}
+world_map <- maps::map("world", plot = FALSE, fill = TRUE) %>%
+  st_as_sf()
+
+old_names <- c("Bahamas, The", "Cabo Verde", "Czechia", "Congo, Dem. Rep.", "Egypt, Arab Rep.", "Gambia, The", "Korea, Rep.",
+               "Kyrgyz Republic", "Iran, Islamic Rep.", "Lao PDR", "Moldova", "Congo, Rep.",
+               "Russian Federation", "Slovak Republic", "Syrian Arab Republic",
+               "Turkiye", "United States",
+               "United Kingdom", "Venezuela, RB", "British Virgin Islands", "Virgin Islands (U.S.)", "	
+Yemen, Rep.")
+new_names <- c("Bahamas", "Cape Verde", "Czech Republic", "Democratic Republic of the Congo", "Egypt", "Gambia",
+               "South Korea", "Kyrgyzstan", "Iran", "Laos", "Moldovia", "Republic of Congo", "Russia", "Slovakia",
+               "Syria", "Turkey", "USA", "UK", "Venezuela", "Virgin Islands, British", "Virgin Islands, US", "Yemen")
+
+for (i in 1:length(new_names)){
+  world_map$ID[world_map$ID == new_names[i]] <- old_names[i]
+}
+
+leaflet_data <- select(df, Country, cluster) %>%
+  inner_join(world_map, by = c("Country"="ID"))
+```
+
+```{r}
+p <- ggplot(leaflet_data, aes(geometry=geom, fill = cluster)) +
+      geom_sf() +
+      theme_void() +
+      labs(fill = "Clusters"
+           , title = "Countries Clustered Over HDI Indicators") +
+      scale_fill_brewer(palette = "Pastel2")  
+
+p
+```
+
+```{r}
 train <- macro_trends_imp %>%
   filter(year < 2019)
 

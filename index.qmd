@@ -71,7 +71,7 @@ You can include [links](https://www.datadreaming.org/post/r-markdown-theme-galle
 You should include links to relevant sites as you write. You should additionally include a list of references as the end of your blog with full citations (and relevant links).
 
 
-## Visualizations 
+## Cluster Analysis of HDI Indicators
 
 Visualizations, particularly interactive ones, will be well-received. That said, do not overuse visualizations. You may be better off with one complicated but well-crafted visualization as opposed to many quick-and-dirty plots. Any plots should be well-thought-out, properly labeled, informative, and visually appealing.
 
